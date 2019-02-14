@@ -15,7 +15,7 @@ Bad user interfaces
     - [**Tampermonkey**](https://tampermonkey.net/) works in Chrome, Firefox, Edge (not IE), Safari, Opera, and Vivaldi.
     - [Violentmonkey](https://violentmonkey.github.io/get-it/) works in Chrome, Firefox, Opera, and Vivaldi.
     - [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) works in Firefox.
-1. Click the site name in the [table below](#targeted-websites)
+1. Click the site name in the [table below](#targeted-websites).
     - Alternately, you can open the user script file from this repository that you want, then click the Raw button.
 1. On the Tampermonkey page that appears, click the **Install** button.
 
