@@ -26,5 +26,5 @@ Bad user interfaces
 |Site|Changes|
 |---|---|
 |[Inoreader](https://github.com/Aldaviva/userscripts/raw/master/inoreader-video-controls.user.js)|When showing an article with a video, make the video muted, loop, and autoplay, since Inoreader capriciously removes these attributes.|
+|[Rooster Teeth](https://roosterteeth.com/episodes)|When watching a Rooster Teeth video, remember the most recently used audio volume, instead of always resetting the volume to 100% when you load a new page.|
 |[YouTube](https://github.com/Aldaviva/userscripts/raw/master/force-youtube-theater-mode.user.js)|When watching a YouTube video, force the page into Theater Mode, where the video's width expands to also include the Related Videos column on the right. YouTube does a terrible job of remembering the most-recently-used Theater mode state.|
-|[Rooster Teeth](https://roosterteeth.com/episodes)|When watching a video, remember the most-recently-used audio volume, instead of always resetting the volume to 100% when you load a new page.|
