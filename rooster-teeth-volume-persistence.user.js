@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Rooster Teeth Volume Persistence
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.1
-// @description  Remember audio volume level on Rooster Teeth videos
+// @version      0.0.2
+// @description  Remember audio volume level on Rooster Teeth videos, and set resolution to the highest frame size
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
 // @grant        none
@@ -18,7 +18,7 @@
 
     var desiredVolumeLevel = parseFloat(localStorage.getItem(audioVolumePersistenceKey));
 
-    waitUntilElementsByTagName("video", 100, new Date().getTime() + maxWait, function(err, elements){
+    waitUntilElementsBySelector("video", 50, new Date().getTime() + maxWait, function(err, elements){
         if(err){
             console.error("Rooster Teeth Volume Persistence user script: could not find <video> element after "+maxWait+" milliseconds");
         } else {
@@ -37,18 +37,27 @@
                         console.info("Rooster Teeth Volume Persistence user script: saved audio volume "+newVolume);
                     });
                 }, 0);
-            }, 200);
+            }, 300);
         }
     });
 
-    function waitUntilElementsByTagName(tagName, retryInterval, deadline, callback){
-        var elements = document.getElementsByTagName(tagName);
+    waitUntilElementsBySelector(".vjs-resolution-button .vjs-menu-item", 50, new Date().getTime() + maxWait, function(err, elements){
+        if(err){
+            console.error("Rooster Teeth Volume Persistence user script: could not find resolution menu item element after "+maxWait+" milliseconds");
+        } else {
+            elements[1].click();
+            console.info("Rooster Teeth Volume Persistence user script: forced video to highest resolution");
+        }
+    });
+
+    function waitUntilElementsBySelector(selector, retryInterval, deadline, callback){
+        var elements = document.querySelectorAll(selector);
         if(elements.length){
             callback(null, elements);
         } else if(new Date() <= deadline) {
-            setTimeout(waitUntilElementsByTagName.bind(null, tagName, retryInterval, deadline, callback), retryInterval);
+            setTimeout(waitUntilElementsBySelector.bind(null, selector, retryInterval, deadline, callback), retryInterval);
         } else {
-            callback(new Error("deadline passed and no "+tagName+" elements were found"));
+            callback(new Error("deadline passed and no "+selector+" elements were found"));
         }
     }
 
