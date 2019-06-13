@@ -12,8 +12,6 @@
 (function() {
     'use strict';
 
-    var ELEMENT_NODE = 1;
-
     var parent = document.getElementById("splitter");
     var observer = new MutationObserver(onMutation);
     var options = {
@@ -26,7 +24,7 @@
     function onMutation(mutations, observer){
         mutations.forEach(function(mutation){
             mutation.addedNodes.forEach(function(addedNode){
-                if(addedNode.nodeType === ELEMENT_NODE){
+                if(addedNode.nodeType === Node.ELEMENT_NODE){
                     var videoElements = addedNode.getElementsByTagName("video");
                     Array.prototype.forEach.call(videoElements, function(videoElement){
                         videoElement.muted = true;
