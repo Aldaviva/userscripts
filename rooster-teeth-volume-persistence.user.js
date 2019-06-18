@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rooster Teeth Volume Persistence
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.2
+// @version      0.0.3
 // @description  Remember audio volume level on Rooster Teeth videos, and set resolution to the highest frame size
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
@@ -14,7 +14,7 @@
     'use strict';
 
     var audioVolumePersistenceKey = "audio volume";
-    var maxWait = 3000;
+    var maxWait = 30*1000;
 
     var desiredVolumeLevel = parseFloat(localStorage.getItem(audioVolumePersistenceKey));
 
