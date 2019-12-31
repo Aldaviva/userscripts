@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         NewEgg
+// @name         Newegg
 // @namespace    https://aldaviva.com/userscripts/newegg
 // @version      0.0.1
 // @description  Add more years to recent orders filter dropdown
