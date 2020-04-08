@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter Modal Tweets
 // @namespace    https://aldaviva.com/userscripts/twitter
-// @version      0.0.1
+// @version      0.0.2
 // @description  Open embedded tweets in a modal on your timeline, instead of on the author's homepage
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -12,15 +12,48 @@
 (function() {
     'use strict';
 
-    function setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage(){
-        // https://twitter.com/jseakle/status/1173338256676724736
+    var cookiePattern = /\brweb_optin=(\w+)\b/;
+
+    var originalCookieProperty = Object.getOwnPropertyDescriptor(Document.prototype, "cookie");
+    var originalGetCookie = originalCookieProperty.get.bind(document);
+    var originalSetCookie = originalCookieProperty.set.bind(document);
+
+    function setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage() {
         var expirationDate = new Date();
         expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
-        document.cookie = "rweb_optin=false;domain=.twitter.com;path=/;expires=" + expirationDate.toUTCString();
+        // Source: https://twitter.com/jseakle/status/1173338256676724736
+        originalSetCookie("rweb_optin=false;domain=.twitter.com;path=/;expires=" + expirationDate.toUTCString());
     }
 
-    setInterval(setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage, 10 * 60 * 1000);
     setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+
+    Object.defineProperty(document, "cookie", {
+        configurable: false,
+        get: function() {
+            var allCookies = originalGetCookie();
+            if (isUnwantedCookie(allCookies)) {
+                setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+                allCookies = originalGetCookie();
+            }
+            return allCookies;
+        },
+        set: function(newCookie) {
+            if (isUnwantedCookie(newCookie)) {
+                setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+                return "rweb_optin=false";
+            } else {
+                originalSetCookie(newCookie); //when proxying, doesn't return anything for some reason
+                return newCookie.split(";", 1);
+            }
+        }
+    });
+
+    function isUnwantedCookie(oneOrMoreCookies) {
+        var matches = oneOrMoreCookies.matches(cookiePattern);
+        return matches !== null && matches[1] !== "false";
+    }
+
+    console.info("Twitter Modal Tweets: intercepting cookie calls to open embedded tweets on the timeline");
 
 })();
