@@ -50,7 +50,7 @@
     });
 
     function isUnwantedCookie(oneOrMoreCookies) {
-        var matches = oneOrMoreCookies.matches(cookiePattern);
+        var matches = oneOrMoreCookies.match(cookiePattern);
         return matches !== null && matches[1] !== "false";
     }
 
