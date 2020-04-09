@@ -18,7 +18,7 @@
     var originalGetCookie = originalCookieProperty.get.bind(document);
     var originalSetCookie = originalCookieProperty.set.bind(document);
 
-    function setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage() {
+    function setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage() {
         var expirationDate = new Date();
         expirationDate.setFullYear(expirationDate.getFullYear() + 1);
 
@@ -26,21 +26,21 @@
         originalSetCookie("rweb_optin=false;domain=.twitter.com;path=/;expires=" + expirationDate.toUTCString());
     }
 
-    setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+    setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
 
     Object.defineProperty(document, "cookie", {
         configurable: false,
         get: function() {
             var allCookies = originalGetCookie();
             if (isUnwantedCookie(allCookies)) {
-                setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+                setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
                 allCookies = originalGetCookie();
             }
             return allCookies;
         },
         set: function(newCookie) {
             if (isUnwantedCookie(newCookie)) {
-                setOpenTweetsInModelOnYourTimelineInsteadOfAuthorsHomepage();
+                setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
                 return "rweb_optin=false";
             } else {
                 originalSetCookie(newCookie); //when proxying, doesn't return anything for some reason
