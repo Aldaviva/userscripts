@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter Modal Tweets
 // @namespace    https://aldaviva.com/userscripts/twitter
-// @version      0.0.2
+// @version      0.0.3
 // @description  Open embedded tweets in a modal on your timeline, instead of on the author's homepage
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
