@@ -1,59 +1,37 @@
 // ==UserScript==
-// @name         Twitter Modal Tweets
+// @name         Twitter Ordering Enforcer
 // @namespace    https://aldaviva.com/userscripts/twitter
-// @version      0.0.3
-// @description  Open embedded tweets in a modal on your timeline, instead of on the author's homepage
+// @version      1.0.0
+// @description  Always show Latest Tweets First on the home timeline, instead of Top Tweets First.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
-// @run-at       document-start
+// @run-at       document-idle
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    var cookiePattern = /\brweb_optin=(\w+)\b/;
+    main();
 
-    var originalCookieProperty = Object.getOwnPropertyDescriptor(Document.prototype, "cookie");
-    var originalGetCookie = originalCookieProperty.get.bind(document);
-    var originalSetCookie = originalCookieProperty.set.bind(document);
-
-    function setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage() {
-        var expirationDate = new Date();
-        expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-
-        // Source: https://twitter.com/jseakle/status/1173338256676724736
-        originalSetCookie("rweb_optin=false;domain=.twitter.com;path=/;expires=" + expirationDate.toUTCString());
+    function main(){
+        setInterval(ensureLatestTweetsFirst, 1 * 60 * 1000);
+        ensureLatestTweetsFirst();
     }
 
-    setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
-
-    Object.defineProperty(document, "cookie", {
-        configurable: false,
-        get: function() {
-            var allCookies = originalGetCookie();
-            if (isUnwantedCookie(allCookies)) {
-                setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
-                allCookies = originalGetCookie();
-            }
-            return allCookies;
-        },
-        set: function(newCookie) {
-            if (isUnwantedCookie(newCookie)) {
-                setOpenTweetsInModalOnYourTimelineInsteadOfAuthorsHomepage();
-                return "rweb_optin=false";
-            } else {
-                originalSetCookie(newCookie); //when proxying, doesn't return anything for some reason
-                return newCookie.split(";", 1);
-            }
+    function ensureLatestTweetsFirst(){
+        if(isShowingTopTweetsFirst()){
+            toggleTopTweetsFirst();
         }
-    });
-
-    function isUnwantedCookie(oneOrMoreCookies) {
-        var matches = oneOrMoreCookies.match(cookiePattern);
-        return matches !== null && matches[1] !== "false";
     }
 
-    console.info("Twitter Modal Tweets: intercepting cookie calls to open embedded tweets on the timeline");
+    function isShowingTopTweetsFirst(){
+        const headingEl = document.querySelector('div[data-testid="primaryColumn"] h2 span');
+        return headingEl && headingEl.innerText === "Home";
+    }
 
+    function toggleTopTweetsFirst(){
+        document.querySelector('div[aria-label ^= "Top Tweets"]').click();
+        document.querySelector('div[role="menuitem"]').click();
+    }
 })();
