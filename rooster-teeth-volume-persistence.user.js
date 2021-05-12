@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rooster Teeth Volume Persistence
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.4
+// @version      0.0.5
 // @description  Remember audio volume level on Rooster Teeth videos, and set resolution to the highest frame size
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
@@ -47,6 +47,7 @@
             console.error("Rooster Teeth Volume Persistence user script: could not find resolution menu item element after "+maxWait+" milliseconds");
         } else {
             elements[1].click();
+            document.querySelector("video").focus();
             console.info("Rooster Teeth Volume Persistence user script: forced video to highest resolution ("+elements[1].textContent+")");
         }
     });
