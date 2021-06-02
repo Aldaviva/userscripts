@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter
 // @namespace    https://aldaviva.com/userscripts/twitter
-// @version      1.2.0
+// @version      1.2.1
 // @description  Always show Latest Tweets First on the home timeline, instead of Top Tweets First. Ignore unread notifications, but still show unread DMs. Don't automatically reload all the time.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -105,6 +105,7 @@
         const reloaderMethodPattern = /=Date\.now\(\).*?\b(?<methodName>\w{1,3})=\w{1,3}=>{const \w{1,3}=Date\.now\(\).*?window\.location\.reload\(/gm;
         const originalDateNow = Date.now;
         const reloaderMethodName = findReloaderMethodName();
+        const stackContainsMethod = getStackMatcherForCurrentJavascriptEngine();
 
         Object.defineProperty(Date, "now", {
             value: function() {
@@ -146,16 +147,26 @@
                 //"Object.fetchInitialOrTop" //appears on its own
             ].filter(x => x !== null);
 
-            //V8-specific stacktrace format, SpiderMonkey has a different format
-            const isMatchingStack = methodNamesToFind.some(methodName => stack.indexOf(`\n    at ${methodName} (`) !== -1);
+            const isMatchingStack = methodNamesToFind.some(methodName => stackContainsMethod(stack, methodName));
 
             /*if(isMatchingStack){
-                console.debug("Found matching invocation: "+stack);
+                console.debug("Found matching invocation:", stack);
             } else {
                 console.debug(`Other call to Date.now() at ${performance.timeOrigin + performance.now()}:`, stack);
             }*/
             return isMatchingStack;
         }
+
+        function getStackMatcherForCurrentJavascriptEngine(){
+            if(navigator.userAgent.indexOf(" Chrome/") !== -1){
+                return (stack, methodName) => stack.indexOf(`\n    at ${methodName} (`) !== -1;
+            } else if(navigator.userAgent.indexOf(" Firefox/") !== -1){
+                return (stack, methodName) => stack.indexOf(`\n${methodName}@`) !== -1;
+            } else {
+                return () => false;
+            }
+        }
+
     }
 
 })();
