@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rooster Teeth Volume Persistence
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.5
+// @version      0.0.6
 // @description  Remember audio volume level on Rooster Teeth videos, and set resolution to the highest frame size
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
@@ -27,12 +27,18 @@
 
             setTimeout(function(){
                 if(!isNaN(desiredVolumeLevel)){
+                    videoEl.muted = false;
                     videoEl.volume = desiredVolumeLevel;
                     console.info("Rooster Teeth Volume Persistence user script: restored audio volume to "+desiredVolumeLevel);
                 }
 
                 setTimeout(function(){
                     videoEl.addEventListener("volumechange", function(event){
+                        if(videoEl.muted){
+                            videoEl.muted = false;
+                            console.info("Rooster Teeth Volume Persistence user script: unmuted video, volume is now "+videoEl.volume);
+                        }
+
                         var newVolume = videoEl.volume;
                         localStorage.setItem(audioVolumePersistenceKey, newVolume);
                         console.info("Rooster Teeth Volume Persistence user script: saved audio volume "+newVolume);
@@ -42,11 +48,11 @@
         }
     });
 
-    waitUntilElementsBySelector(".vjs-resolution-button .vjs-menu-item", 50, new Date().getTime() + maxWait, function(err, elements){
+    waitUntilElementsBySelector(".vjs-quality-menu-button + .vjs-menu .vjs-menu-item", 50, new Date().getTime() + maxWait, function(err, elements){
         if(err){
             console.error("Rooster Teeth Volume Persistence user script: could not find resolution menu item element after "+maxWait+" milliseconds");
         } else {
-            elements[1].click();
+            elements[0].click();
             document.querySelector("video").focus();
             console.info("Rooster Teeth Volume Persistence user script: forced video to highest resolution ("+elements[1].textContent+")");
         }
