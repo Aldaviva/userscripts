@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Twitter
+// @name         Twitter Disable Auto-Reloading
 // @namespace    https://aldaviva.com/userscripts/twitter/disable-auto-reloading
 // @version      1.2.2
 // @description  Don't automatically reload all the time.
