@@ -37,4 +37,5 @@ Bad user interfaces
 |[Twitter chronological timeline](https://github.com/Aldaviva/userscripts/raw/master/twitter-chronological.user.js)|Show tweets on the home timeline in the order they were posted, not Top Tweets First.|
 |[Twitter disable auto-reloading](https://github.com/Aldaviva/userscripts/raw/master/twitter-disable-auto-reloading.user.js)|Stop the web interface from showing new tweets and reloading all the time. Click the Home button to manually load new tweets.|
 |[Twitter ignore notifications](https://github.com/Aldaviva/userscripts/raw/master/twitter-ignore-notifications.user.js)|Hide unread count for all notifications except DMs in the navigation bar, favicon, and page title.|
+|[Wired](https://github.com/Aldaviva/userscripts/raw/master/wired.user.js)|Block the free article limit error.|
 |[YouTube](https://github.com/Aldaviva/userscripts/raw/master/force-youtube-theater-mode.user.js)|When watching a YouTube video, force the page into Theater Mode, where the video's width expands to also include the Related Videos column on the right. YouTube does a terrible job of remembering the most-recently-used Theater mode state.|
