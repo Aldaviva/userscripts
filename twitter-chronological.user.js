@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Chronological Twitter
 // @namespace    https://aldaviva.com/userscripts/twitter/chronological
-// @version      1.2.2
+// @version      1.2.3
 // @description  Always show Latest Tweets First on the home timeline, instead of Top Tweets First.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -13,7 +13,7 @@
     'use strict';
 
     setInterval(ensureLatestTweetsFirst, 1 * 60 * 1000);
-    ensureLatestTweetsFirst();
+    setTimeout(ensureLatestTweetsFirst, 2 * 1000);
 
     function ensureLatestTweetsFirst(){
         if(isShowingTopTweetsFirst()){
