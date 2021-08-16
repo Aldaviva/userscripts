@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch
 // @namespace    https://aldaviva.com/userscripts/twitch
-// @version      0.0.0
+// @version      0.0.1
 // @description  Automatically claim channel points.
 // @author       Ben Hutchison
 // @match        https://www.twitch.tv/*
@@ -12,7 +12,7 @@
     'use strict';
 
     setInterval(function claimChannelPoints(){
-        var channelPointsButton = document.querySelector(".community-points-summary button.tw-button");
+        var channelPointsButton = document.querySelector("button[aria-label='Claim Bonus']");
         if(channelPointsButton){
             console.info("Claiming channel points...");
             channelPointsButton.click();
