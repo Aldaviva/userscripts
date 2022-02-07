@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         Rooster Teeth Volume Persistence
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.6
-// @description  Remember audio volume level on Rooster Teeth videos, and set resolution to the highest frame size
+// @version      0.0.7
+// @description  Remember audio volume level on Rooster Teeth videos, set resolution to the highest frame size, and allow fullscreen video playback for anonymous users again.
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
 // @match        https://roosterteeth.com/watch/*
 // @grant        none
-// @run-at       document-idle
+// @run-at       document-body
 // ==/UserScript==
 
 (function() {
@@ -16,6 +16,11 @@
 
     var audioVolumePersistenceKey = "audio volume";
     var maxWait = 30*1000;
+
+    // Allow fullscreen for anonymous users
+    window.rtConfig = Object.assign({}, window.rtConfig, {
+        REACT_APP_FF_REGISTRATION_GATE: 'false'
+    });
 
     var desiredVolumeLevel = parseFloat(localStorage.getItem(audioVolumePersistenceKey));
 
