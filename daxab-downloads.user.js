@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Fix Daxab Downloads
 // @namespace    https://aldaviva.com/userscripts/fix-daxab-downloads
-// @version      0.3.0
+// @version      0.4.0
 // @description  Daxab tries really hard to not show you the video URL to prevent you from downloading it. Lots of obfuscated code and DOM elements that can't be inspected.
 // @author       Ben Hutchison
 // @match        https://daxab.com/player/*
@@ -13,19 +13,37 @@
 
     const $ = window.$;
 
-    var originalOpen = XMLHttpRequest.prototype.open;
+    const originalOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function(method, url){
-        if(url.startsWith("http") && url.indexOf(".mp4") !== -1){
-            let playlistIndex = url.indexOf("/index.m3u8?");
-            if(playlistIndex !== -1){
-                url = url.substring(0, playlistIndex);
+        //console.debug("opening xhr:", method, url, this);
+
+        const a = document.createElement("a");
+        a.href = url;
+
+        a.pathname = a.pathname.replace(/(\/index\.m3u8)?(\/)?$/, '');
+
+        const suffixMatch = a.pathname.match(/(180|240|360|480|720|1080)(\.mp4)?$/);
+        if(suffixMatch !== null){
+            if(suffixMatch[1] !== ".mp4"){
+                a.pathname += ".mp4";
             }
 
-            addDownloadButton(url);
+            //console.info("Adding download button for URL "+a.href);
+            addDownloadButton(a.href);
+        } else {
+            //console.debug("URL does not refer to a video: "+a.href);
         }
 
         return originalOpen.apply(this, arguments);
     };
+
+    const reloadChecker = setInterval(function(){
+        if($("._text").text() === "Video deleted or private"){
+            clearInterval(reloadChecker);
+            console.info("Video not found, but trying again enough times often works. Reloading page.");
+            window.location.reload();
+        }
+    }, 1000);
 
     new MutationObserver(onMutation).observe(document.body, {
         subtree: true,
@@ -38,6 +56,7 @@
             const newAttributeValue = mutation.target[mutation.attributeName];
             if(mutation.target.tagName.toLowerCase() === "video" && mutation.attributeName === "src" && newAttributeValue !== "" && newAttributeValue.startsWith("http")){
                 let videoUrl = newAttributeValue;
+
                 addDownloadButton(videoUrl);
             }
         });
