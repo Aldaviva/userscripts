@@ -25,7 +25,7 @@ Bad user interfaces
 ## Targeted websites
 
 |Site|Changes|
-|---|---|
+|-|-|
 |[Daxab downloads](https://github.com/Aldaviva/userscripts/raw/master/daxab-downloads.user.js)|Add download button to playback toolbar for videos on Daxab-based sites. Left-click to open the video in a new tab, or right-click it and use Save As or a third-party download manager to save the video.|
 |[Daxab pagination](https://github.com/Aldaviva/userscripts/raw/master/daxab-pagination.user.js)|When searching for videos on Daxab-based sites, pagination will intermittently encounter a spurious error, which returns no results and removes the button to load more results. This is due to horrendous error handling on the server. Detect this case, and restore the page to approximately the state it was in before the error, so the user can try again and not lose all their paginated data by reloading.|
 |[Google Images](https://github.com/Aldaviva/userscripts/raw/master/google-images.user.js)|Always search for Large sizes in Google Images, instead of having to always click Tools › Size › Large every time you change the query.|
@@ -34,6 +34,7 @@ Bad user interfaces
 |[Pandora](https://github.com/Aldaviva/userscripts/raw/master/pandora-now-playing.user.js)|Show the currently playing artist and song title in the Pandora document title.|
 |[Rooster Teeth](https://github.com/Aldaviva/userscripts/raw/master/rooster-teeth-volume-persistence.user.js)|When watching a Rooster Teeth video, remember the most recently used audio volume, instead of always resetting the volume to 100% when you load a new page. Always set the resolution to the largest frame size (typically 1080p) when starting a video, instead of defaulting to a lower automatic resolution. Allow anonymous users to watch videos in full screen again.|
 |[Splitwise](https://github.com/Aldaviva/userscripts/raw/master/splitwise.user.js)|If you're entering a long list of items in an itemized expense and accidentally hit `Esc` at any time, Splitwise will lose all of the data you have entered without prompting you or saving a backup. This fixes that defect, so hitting `Esc` will do nothing.|
+|[TP-Link AX20](https://github.com/Aldaviva/userscripts/raw/master/tplink.user.js)|Block broken redirections to the wrong IP address every time the router login page loads.|
 |[Twitch](https://github.com/Aldaviva/userscripts/raw/master/twitch.user.js)|Automatically claim channel points.|
 |[Twitter chronological timeline](https://github.com/Aldaviva/userscripts/raw/master/twitter-chronological.user.js)|Show tweets on the home timeline in the order they were posted, not Top Tweets First.|
 |[Twitter disable auto-reloading](https://github.com/Aldaviva/userscripts/raw/master/twitter-disable-auto-reloading.user.js)|Stop the web interface from showing new tweets and reloading all the time. Click the Home button to manually load new tweets.|
