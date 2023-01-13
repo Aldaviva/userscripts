@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inoreader toolbar buttons
 // @namespace    https://aldaviva.com/userscripts/inoreader-toolbar-buttons
-// @version      0.2.0
+// @version      0.3.0
 // @description  Add useful toolbar buttons to Inoreader
 // @author       Ben Hutchison
 // @match        https://www.inoreader.com/*
@@ -17,6 +17,8 @@
     showStarredFilterButton();
 
     makeFeedGearOpenSidebarPreferences();
+
+    makeFeedEyeToggleHidingReadFeeds();
 
     function addSubscribeAndManageButtons(){
         var parent = document.getElementById("sb_tp_buttons");
@@ -60,13 +62,32 @@
         };
     }
 
-    //xajax_save_user_pref("hide_read_feeds", "0");
-    //window.hide_read_feeds
     function makeFeedGearOpenSidebarPreferences(){
         document.querySelector(".sf_cog").onclick = function(event){
             event.preventDefault();
             console.log("showing sidebar prefs");
             window.location = "#preferences-interface-tree_pane";
         };
+    }
+
+    function makeFeedEyeToggleHidingReadFeeds(){
+        var parent = document.querySelector(".sidebar_legend");
+        var toggleButton = document.createElement("div");
+        toggleButton.classList.add("toggle_hide_read_feeds", "icon16", "icon-eyeball", "pointer_icon");
+        render();
+        parent.insertBefore(toggleButton, document.getElementById("subscription_options_peek_wrapper"));
+
+        toggleButton.addEventListener("click", function(event){
+            event.preventDefault();
+            var newValue = +!window.hide_read_feeds;
+            window.hide_read_feeds = newValue;
+            render();
+            window.xajax_save_user_pref("hide_read_feeds", ""+newValue);
+        });
+
+        function render(){
+            toggleButton.classList.toggle("hiding_read_feeds", !!window.hide_read_feeds);
+            toggleButton.title = window.hide_read_feeds ? "Show all feeds" : "Show only feeds with unread articles";
+        }
     }
 })();
