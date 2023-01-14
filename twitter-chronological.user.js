@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Chronological Twitter
 // @namespace    https://aldaviva.com/userscripts/twitter/chronological
-// @version      1.2.3
-// @description  Always show Latest Tweets First on the home timeline, instead of Top Tweets First.
+// @version      1.3.0
+// @description  Always show Following on the home timeline, instead of For You First.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
@@ -15,20 +15,19 @@
     setInterval(ensureLatestTweetsFirst, 1 * 60 * 1000);
     setTimeout(ensureLatestTweetsFirst, 2 * 1000);
 
-    function ensureLatestTweetsFirst(){
-        if(isShowingTopTweetsFirst()){
-            toggleTopTweetsFirst();
+    function ensureLatestTweetsFirst() {
+        const followingTab = document.querySelector("[data-testid=ScrollSnap-List] :nth-child(2) a");
+        if (followingTab && !isTabActive(followingTab)) {
+            activateTab(followingTab);
         }
     }
 
-    function isShowingTopTweetsFirst(){
-        const headingEl = document.querySelector('div[data-testid="primaryColumn"] h2 span');
-        return headingEl && headingEl.innerText === "Home";
+    function isTabActive(tabEl) {
+        return tabEl.ariaSelected === 'true';
     }
 
-    function toggleTopTweetsFirst(){
-        document.querySelector('div[aria-label ^= "Top Tweets"]').click();
-        document.querySelector('div[role="menuitem"]').click();
+    function activateTab(tabEl) {
+        tabEl.click();
     }
 
 })();
