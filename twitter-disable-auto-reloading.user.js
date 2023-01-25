@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter Disable Auto-Reloading
 // @namespace    https://aldaviva.com/userscripts/twitter/disable-auto-reloading
-// @version      1.2.2
+// @version      1.2.3
 // @description  Don't automatically reload all the time.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -54,7 +54,7 @@
     });
 
     function findReloaderMethodName(){
-        for(let bucket of window.webpackJsonp){
+        for(let bucket of window.webpackChunk_twitter_responsive_web){
             for(let moduleName in bucket[1]){
                 const module = bucket[1][moduleName];
                 const moduleSource = module.toString();
