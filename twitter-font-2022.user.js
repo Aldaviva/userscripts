@@ -2,7 +2,7 @@
 // @name         Twitter Font 2022
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
 // @version      0.0.0
-// @description  Revert the font changes that were made on 2023-01-26 (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators)
+// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0`. (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators)
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
