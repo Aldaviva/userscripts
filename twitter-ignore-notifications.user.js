@@ -27,9 +27,6 @@
         observer.observe(titleEl, { characterData: true, childList: true });
 
         function hideUnreadNotifications(){
-            const oldFaviconValue = faviconEl.getAttribute("href");
-            const oldTitleValue = titleEl.text;
-
             const titleMatches = titleNotificationCountPattern.exec(titleEl.text);
             const titleNotificationCount = titleMatches !== null ? parseInt(titleMatches[1]) : 0;
 

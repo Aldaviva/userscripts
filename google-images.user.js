@@ -44,6 +44,7 @@
      * @return String|Array value(s) of the query param, or undefined if no query param exists. Result is URL-decoded.
      */
     function getQueryParam(key, locationSearch){
+        /* eslint-disable */
         return (function e(k,s,b,c){if(e.a==[]._)for(b=/\??([^=\[\]]+)(?:\[\])?=([^&]+)&?/g,e.a={};c=b.exec(s);e.a[c[1]]=(e.a[c[1]]||[]).concat(window.decodeURIComponent(c[2])));c=e.a[k];c=c instanceof Array&&c.length<2?c[0]:c;return c;})(key, locationSearch || window.location.search);
     }
 })();
