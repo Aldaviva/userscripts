@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Unfuck Twitter
+// @name         Twitter demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
 // @version      0.1.0
-// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0`. (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo changes that were made on 2023-04-03 (https://www.theverge.com/2023/4/3/23668356/twitter-doge-bird-logo-retweet-labels-following-timeline)
+// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0`. (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo change that was made on 2023-04-03 (https://www.theverge.com/2023/4/3/23668356/twitter-doge-bird-logo-retweet-labels-following-timeline)
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
