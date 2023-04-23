@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inoreader toolbar buttons
 // @namespace    https://aldaviva.com/userscripts/inoreader-toolbar-buttons
-// @version      0.3.0
+// @version      0.3.1
 // @description  Add useful toolbar buttons to Inoreader
 // @author       Ben Hutchison
 // @match        https://www.inoreader.com/*
@@ -46,10 +46,11 @@
     }
 
     function showStarredFilterButton(){
-        var originalToolbarSwitcher = window.inno_toolbar_switcher;
+        const originalToolbarSwitcher = window.inno_toolbar_switcher;
 
-        window.inno_toolbar_switcher = function(id, buttons, switch_function){
-            if(buttons.length < 3){
+        window.inno_toolbar_switcher = (id, buttons, switch_function) => {
+            const shouldAddStarredButton = buttons.length < 3;
+            if(shouldAddStarredButton){
                 buttons.push({
                     id: "favorites_cnt_top",
                     caption: window._js("Starred"),
@@ -58,7 +59,16 @@
                 });
             }
 
-            return originalToolbarSwitcher(id, buttons, switch_function);
+            const unreadFilterSwitcher = originalToolbarSwitcher(id, buttons, switch_function);
+
+            if(!shouldAddStarredButton){
+                // If we're already in the Starred section, the above push won't add a button because it's already there. However, we still need to make the button label say "Starred" instead of "Read later".
+                unreadFilterSwitcher.querySelectorAll("#favorites_cnt_top > div").forEach(labelEl => {
+                    labelEl.textContent = window._js("Starred");
+                });
+            }
+
+            return unreadFilterSwitcher;
         };
     }
 
