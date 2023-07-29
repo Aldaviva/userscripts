@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Twitter demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.2.0
-// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo change that was made on 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds).
+// @version      0.2.1
+// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds).
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
@@ -90,5 +90,38 @@
         clearInterval(fontInterval);
         clearInterval(logoInterval);
     }, 30*1000);
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const unwantedTitlePattern = / \/ X$/;
+
+        function fixTitle(){
+            const oldTitle = document.title;
+            let newTitle = null;
+
+            if(oldTitle === "X"){
+                newTitle = "Twitter";
+            } else if(unwantedTitlePattern.test(oldTitle)){
+                newTitle = document.title.replace(unwantedTitlePattern, " / Twitter");
+            }
+
+            if(newTitle !== null){
+                document.title = newTitle;
+                console.debug(`Changed title from '${oldTitle}' to '${document.title}'`);
+            } else {
+                console.debug(`Not changing title '${oldTitle}' because it does not contain 'X'`);
+            }
+        }
+
+        const titleElExistInterval = setInterval(() => {
+            const titleEl = document.querySelector("head title");
+            if(titleEl !== null){
+                clearInterval(titleElExistInterval);
+
+                fixTitle();
+
+                new MutationObserver(fixTitle).observe(titleEl, { childList: true });
+            }
+        }, 20);
+    });
 
 })();
