@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.2.1
+// @version      0.2.2
 // @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds).
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -92,23 +92,25 @@
     }, 30*1000);
 
     document.addEventListener("DOMContentLoaded", () => {
-        const unwantedTitlePattern = / \/ X$/;
+        const titleReplacements = [
+            [/^X$/, "Twitter"],
+            [/ \/ X$/, " / Twitter"],
+            [/ on X: "/, " on Twitter: \""]
+        ];
 
         function fixTitle(){
             const oldTitle = document.title;
-            let newTitle = null;
+            let newTitle = oldTitle;
 
-            if(oldTitle === "X"){
-                newTitle = "Twitter";
-            } else if(unwantedTitlePattern.test(oldTitle)){
-                newTitle = document.title.replace(unwantedTitlePattern, " / Twitter");
+            for(const titleReplacement of titleReplacements){
+                const pattern = titleReplacement[0];
+                const replacement = titleReplacement[1];
+                newTitle = newTitle.replace(pattern, replacement);
             }
 
-            if(newTitle !== null){
+            if(newTitle !== oldTitle){
                 document.title = newTitle;
-                console.debug(`Changed title from '${oldTitle}' to '${document.title}'`);
-            } else {
-                console.debug(`Not changing title '${oldTitle}' because it does not contain 'X'`);
+                console.debug(`Changed title from '${oldTitle}' to '${newTitle}'`);
             }
         }
 
