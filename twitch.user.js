@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch
 // @namespace    https://aldaviva.com/userscripts/twitch
-// @version      0.1.0
+// @version      0.1.1
 // @description  Automatically claim channel points and suppress ads.
 // @author       Ben Hutchison
 // @match        https://www.twitch.tv/*
@@ -15,7 +15,7 @@
     setInterval(function claimChannelPoints(){
         var channelPointsButton = document.querySelector("button[aria-label='Claim Bonus']");
         if(channelPointsButton){
-            console.info("Claiming channel points...");
+            console.info("Claiming channel points");
             channelPointsButton.click();
         }
     }, 2000);
@@ -23,32 +23,34 @@
     let isAdPlaying = false;
     let nonAdMuteState = false;
 
-    waitUntilElementsBySelector(['.video-player video', 'div[data-a-target="ax-overlay"]'], 20, new Date().getTime() + 10000, function(err, els){
+    waitUntilElementsBySelector(['.video-player video', 'div[data-a-target="ax-overlay"]'], 200, null, function(err, els){
         if(!err){
             isAdPlaying = containsAdCountdownElement(document.body);
             onAdPlayingChanged();
 
             const mutationParent = els[1][0].parentElement;
-            if(mutationParent){
-                const mutationObserver = new MutationObserver(changes => {
-                    for(const change of changes){
-                        if(!isAdPlaying && Array.prototype.find.call(change.addedNodes, containsAdCountdownElement) !== undefined){
-                            isAdPlaying = true;
-                            onAdPlayingChanged();
-                            break;
-                        } else if(isAdPlaying && Array.prototype.find.call(change.removedNodes, containsAdCountdownElement) !== undefined){
-                            isAdPlaying = false;
-                            onAdPlayingChanged();
-                            break;
-                        }
+            const mutationObserver = new MutationObserver(changes => {
+                for(const change of changes){
+                    if(!isAdPlaying && Array.prototype.find.call(change.addedNodes, containsAdCountdownElement) !== undefined){
+                        isAdPlaying = true;
+                        onAdPlayingChanged();
+                        break;
+                    } else if(isAdPlaying && Array.prototype.find.call(change.removedNodes, containsAdCountdownElement) !== undefined){
+                        isAdPlaying = false;
+                        onAdPlayingChanged();
+                        break;
                     }
-                });
+                }
+            });
 
-                mutationObserver.observe(mutationParent, {
-                    subtree: true,
-                    childList: true
-                });
-            }
+            mutationObserver.observe(mutationParent, {
+                subtree: true,
+                childList: true
+            });
+
+            console.debug("Waiting for ads.");
+        } else {
+            console.warn(err.message);
         }
     });
 
@@ -81,7 +83,7 @@
 
         if(elements.every(nodeList => nodeList.length > 0)){
             callback(null, elements);
-        } else if(new Date() <= deadline) {
+        } else if(new Date() <= deadline || !(deadline > 0)) {
             setTimeout(waitUntilElementsBySelector.bind(null, selectors, retryInterval, deadline, callback), retryInterval);
         } else {
             callback(new Error(`deadline passed and one or more ${selectors} elements were not found`));
