@@ -26,6 +26,7 @@ Bad user interfaces
 
 |Site|Changes|
 |-|-|
+|[Bluesky](https://github.com/Aldaviva/userscripts/raw/master/bluesky.user.js)|Hide self-reposts.|
 |[Daxab downloads](https://github.com/Aldaviva/userscripts/raw/master/daxab-downloads.user.js)|Add download button to playback toolbar for videos on Daxab-based sites. Left-click to open the video in a new tab, or right-click it and use Save As or a third-party download manager to save the video.|
 |[Daxab pagination](https://github.com/Aldaviva/userscripts/raw/master/daxab-pagination.user.js)|When searching for videos on Daxab-based sites, pagination will intermittently encounter a spurious error, which returns no results and removes the button to load more results. This is due to horrendous error handling on the server. Detect this case, and restore the page to approximately the state it was in before the error, so the user can try again and not lose all their paginated data by reloading.|
 |[Google Images](https://github.com/Aldaviva/userscripts/raw/master/google-images.user.js)|Always search for Large sizes in Google Images, instead of having to always click Tools › Size › Large every time you change the query.|
