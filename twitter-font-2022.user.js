@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Twitter demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.2.2
-// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds).
+// @version      0.3.0
+// @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds). Make the home nav button a birdhouse again.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
 // @grant        none
@@ -86,9 +86,22 @@
         }
     }, 20);
 
+    /* Replace the home nav button's house logo with the original birdhouse */
+    const birdhouseCoordinates = "M12 1.696L.622 8.807l1.06 1.696L3 9.679V19.5C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5V9.679l1.318.824 1.06-1.696L12 1.696zM12 16.5c-1.933 0-3.5-1.567-3.5-3.5s1.567-3.5 3.5-3.5 3.5 1.567 3.5 3.5-1.567 3.5-3.5 3.5z";
+    const birdhouseInterval = setInterval(() => {
+        const logoEl = document.querySelector("nav a[aria-label = 'Home'] svg");
+        if(logoEl){
+            const birdhousePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            birdhousePath.setAttribute("d", birdhouseCoordinates);
+            logoEl.replaceChildren(birdhousePath);
+            clearInterval(birdhouseInterval);
+        }
+    }, 20);
+
     setTimeout(() => {
         clearInterval(fontInterval);
         clearInterval(logoInterval);
+        clearInterval(birdhouseInterval);
     }, 30*1000);
 
     document.addEventListener("DOMContentLoaded", () => {
