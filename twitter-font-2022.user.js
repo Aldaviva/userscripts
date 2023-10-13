@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.3.0
+// @version      0.3.1
 // @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds). Make the home nav button a birdhouse again.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -87,16 +87,48 @@
     }, 20);
 
     /* Replace the home nav button's house logo with the original birdhouse */
-    const birdhouseCoordinates = "M12 1.696L.622 8.807l1.06 1.696L3 9.679V19.5C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5V9.679l1.318.824 1.06-1.696L12 1.696zM12 16.5c-1.933 0-3.5-1.567-3.5-3.5s1.567-3.5 3.5-3.5 3.5 1.567 3.5 3.5-1.567 3.5-3.5 3.5z";
+    const birdhouseFilledCoordinates = "M12 1.696L.622 8.807l1.06 1.696L3 9.679V19.5C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5V9.679l1.318.824 1.06-1.696L12 1.696zM12 16.5c-1.933 0-3.5-1.567-3.5-3.5s1.567-3.5 3.5-3.5 3.5 1.567 3.5 3.5-1.567 3.5-3.5 3.5z";
+    const birdhouseStrokedCoordinates = "M12 9c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4zm0 6c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm0-13.304L.622 8.807l1.06 1.696L3 9.679V19.5C3 20.881 4.119 22 5.5 22h13c1.381 0 2.5-1.119 2.5-2.5V9.679l1.318.824 1.06-1.696L12 1.696zM19 19.5c0 .276-.224.5-.5.5h-13c-.276 0-.5-.224-.5-.5V8.429l7-4.375 7 4.375V19.5z";
     const birdhouseInterval = setInterval(() => {
-        const logoEl = document.querySelector("nav a[aria-label = 'Home'] svg");
-        if(logoEl){
-            const birdhousePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            birdhousePath.setAttribute("d", birdhouseCoordinates);
-            logoEl.replaceChildren(birdhousePath);
+        const unwantedLogoEl = document.querySelector("nav a[aria-label = 'Home'] svg");
+        if(unwantedLogoEl){
+            const birdhouseFilledPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            birdhouseFilledPath.setAttribute("d", birdhouseFilledCoordinates);
+            const filledLogoEl = unwantedLogoEl.cloneNode(true);
+            filledLogoEl.replaceChildren(birdhouseFilledPath);
+            filledLogoEl.classList.add("filled");
+            unwantedLogoEl.parentNode.appendChild(filledLogoEl);
+
+            const birdhouseStrokedPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            birdhouseStrokedPath.setAttribute("d", birdhouseStrokedCoordinates);
+            const strokedLogoEl = unwantedLogoEl.cloneNode(true);
+            strokedLogoEl.replaceChildren(birdhouseStrokedPath);
+            strokedLogoEl.classList.add("stroked");
+            unwantedLogoEl.parentNode.appendChild(strokedLogoEl);
+
             clearInterval(birdhouseInterval);
         }
     }, 20);
+
+    const birdhouseStyle = document.createElement("style");
+    birdhouseStyle.textContent =
+`nav a[aria-label = 'Home'] svg {
+    display: none;
+}
+
+nav a[aria-label = 'Home'] svg.stroked {
+    display: inline-block;
+}
+
+html:has(> head > link[rel = 'canonical'][href = 'https://twitter.com/home']) > body nav a[aria-label = 'Home'] svg.filled {
+    display: inline-block;
+}
+
+html:has(> head > link[rel = 'canonical'][href = 'https://twitter.com/home']) > body nav a[aria-label = 'Home'] svg.stroked {
+    display: none;
+}
+`;
+    document.head.appendChild(birdhouseStyle);
 
     setTimeout(() => {
         clearInterval(fontInterval);
