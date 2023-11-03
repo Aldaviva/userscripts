@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bluesky
 // @namespace    https://aldaviva.com/userscripts/bluesky
-// @version      0.0.0
+// @version      0.0.1
 // @description  Hide self-reposts
 // @author       Ben Hutchison
 // @match        https://bsky.app/*
@@ -18,28 +18,20 @@
             console.info(`Could not find timeline parent after ${maxWaitSec} seconds`);
         } else {
             const timelinesParentEl = els[0][0];
+
+            hideSelfReposts(document.body);
+
             new MutationObserver(mutations => {
                 for (const mutation of mutations){
                     for (const addedNode of mutation.addedNodes){
-                        const feedItems = addedNode.nodeType === Node.ELEMENT_NODE ? addedNode.querySelectorAll("div[role=link][data-testid ^= 'feedItem-by-']") : [];
-                        for (const feedItem of feedItems){
-                            let repostHeading, repostedByUsername, postedByUsername;
-
-                            if((repostHeading = feedItem.querySelector(":scope > div > div > div > div"))
-                                && (repostHeading.firstChild?.textContent === "Reposted by")
-                                && (repostedByUsername = repostHeading.querySelector("a")?.pathname.split('/', 3)[2])
-                                && (postedByUsername = feedItem.querySelector(":scope > div + div > div + div > div > div > a[href^='/profile/']")?.pathname.split('/', 3)[2])
-                                && repostedByUsername === postedByUsername){
-
-                                feedItem.classList.add("repost");
-                                console.log(`Hid repost from ${repostedByUsername}`);
-                            }
+                        if(addedNode.nodeType === Node.ELEMENT_NODE){
+                            hideSelfReposts(addedNode);
                         }
                     }
                 }
             }).observe(timelinesParentEl, {
-                subtree: true,
-                childList: true
+                childList: true,
+                subtree: true
             });
 
             const styleEl = document.createElement("style");
@@ -48,10 +40,24 @@
                     display: none;
                 }`;
             document.head.appendChild(styleEl);
-
-            console.info("Listening for timeline updates");
         }
     });
+
+    function hideSelfReposts(parentEl){
+        const feedItems = parentEl.querySelectorAll("div[role=link][data-testid ^= 'feedItem-by-']");
+        for (const feedItem of feedItems){
+            const repostHeading = feedItem.querySelector(":scope > div > div > div > div");
+            if(repostHeading?.firstChild?.textContent === "Reposted by"){
+                const repostedByDisplayName = repostHeading.querySelector("span").textContent;
+                const postedByDisplayName = feedItem.querySelector(":scope > div + div > div + div > div > div > div").firstChild.textContent;
+
+                if(repostedByDisplayName === postedByDisplayName){
+                    feedItem.classList.add("repost");
+                    console.log(`Hid repost from ${repostedByDisplayName}`);
+                }
+            }
+        }
+    }
 
     function waitUntilElementsBySelector(selectors, retryInterval, deadline, callback){
         if(typeof selectors.map !== "function"){
