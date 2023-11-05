@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bluesky
 // @namespace    https://aldaviva.com/userscripts/bluesky
-// @version      0.0.1
+// @version      0.0.2
 // @description  Hide self-reposts
 // @author       Ben Hutchison
 // @match        https://bsky.app/*
@@ -45,15 +45,15 @@
 
     function hideSelfReposts(parentEl){
         const feedItems = parentEl.querySelectorAll("div[role=link][data-testid ^= 'feedItem-by-']");
-        for (const feedItem of feedItems){
+        for(const feedItem of feedItems){
             const repostHeading = feedItem.querySelector(":scope > div > div > div > div");
             if(repostHeading?.firstChild?.textContent === "Reposted by"){
-                const repostedByDisplayName = repostHeading.querySelector("span").textContent;
-                const postedByDisplayName = feedItem.querySelector(":scope > div + div > div + div > div > div > div").firstChild.textContent;
+                const repostedByUsername = repostHeading.querySelector("a")?.pathname.split('/', 3)[2];
+                const postedByUsername = feedItem.querySelector(":scope > div + div > div + div > div > div > a[href^='/profile/']")?.pathname.split('/', 3)[2];
 
-                if(repostedByDisplayName === postedByDisplayName){
+                if(repostedByUsername === postedByUsername){
                     feedItem.classList.add("repost");
-                    console.log(`Hid repost from ${repostedByDisplayName}`);
+                    console.log(`Hid repost from ${repostedByUsername}`);
                 }
             }
         }
