@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch
 // @namespace    https://aldaviva.com/userscripts/twitch
-// @version      0.1.1
+// @version      0.2.0
 // @description  Automatically claim channel points and suppress ads.
 // @author       Ben Hutchison
 // @match        https://www.twitch.tv/*
@@ -12,11 +12,16 @@
 (function() {
     'use strict';
 
-    setInterval(function claimChannelPoints(){
+    setInterval(function(){
         var channelPointsButton = document.querySelector("button[aria-label='Claim Bonus']");
         if(channelPointsButton){
             console.info("Claiming channel points");
             channelPointsButton.click();
+        }
+
+        if(document.querySelector(".content-overlay-gate p")?.textContent?.endsWith("(Error #2000)") ?? false){
+            document.querySelector(".content-overlay-gate button").click();
+            return;
         }
     }, 2000);
 
