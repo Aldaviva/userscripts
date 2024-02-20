@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Rooster Teeth Volume Persistence
+// @name         Rooster Teeth
 // @namespace    https://aldaviva.com/userscripts/roosterteeth-volume-persistence
-// @version      0.0.8
-// @description  Remember audio volume level on Rooster Teeth videos, set resolution to the highest frame size, and allow fullscreen video playback for anonymous users again.
+// @version      0.0.9
+// @description  Disable autoplaying next video (binge watching).
 // @author       Ben Hutchison
 // @match        https://roosterteeth.com/episode/*
 // @match        https://roosterteeth.com/watch/*
@@ -11,80 +11,38 @@
 // ==/UserScript==
 
 (function() {
-
     'use strict';
 
-    const audioVolumePersistenceKey = "audio volume";
-    const maxWait = 30 * 1000;
-    const desiredVolumeLevel = parseFloat(localStorage.getItem(audioVolumePersistenceKey));
+    disableAutoplayNextVideo();
 
-    waitUntilElementsBySelector("video", 50, new Date().getTime() + maxWait, (err, elements) => {
-        if(err){
-            console.error("Rooster Teeth Volume Persistence user script: could not find <video> element after "+maxWait+" milliseconds");
-        } else {
-            const videoEl = elements[0];
+    function disableAutoplayNextVideo(){
+        waitUntilElementsBySelector(".persistent-player", 2000, new Date() + 30*1000, (err, els) => {
+            if(err){
+                console.error("Could not find .persistent-player after 30 seconds");
+                return;
+            }
 
-            setTimeout(function(){
-                if(!isNaN(desiredVolumeLevel)){
-                    videoEl.muted = false;
-                    videoEl.volume = desiredVolumeLevel;
-                    console.info("Rooster Teeth Volume Persistence user script: restored audio volume to "+desiredVolumeLevel);
-                }
+            const videoContainerEl = els[0][0];
+            const videoContainer = videoContainerEl[Object.getOwnPropertyNames(videoContainerEl).find(key => key.startsWith("__reactInternalInstance$"))];
 
-                setTimeout(function(){
-                    videoEl.addEventListener("volumechange", function(event){
-                        if(videoEl.muted){
-                            videoEl.muted = false;
-                            console.info("Rooster Teeth Volume Persistence user script: unmuted video, volume is now "+videoEl.volume);
-                        }
-
-                        const newVolume = videoEl.volume;
-                        localStorage.setItem(audioVolumePersistenceKey, newVolume);
-                        console.info("Rooster Teeth Volume Persistence user script: saved audio volume "+newVolume);
-                    });
-                }, 0);
-            }, 300);
-        }
-    });
-
-    waitUntilElementsBySelector(".vjs-quality-menu-button + .vjs-menu .vjs-menu-item", 50, new Date().getTime() + maxWait, (err, elements) => {
-        if(err){
-            console.error("Rooster Teeth Volume Persistence user script: could not find resolution menu item element after "+maxWait+" milliseconds");
-        } else {
-            elements[0].click();
-            document.querySelector("video").focus();
-            console.info("Rooster Teeth Volume Persistence user script: forced video to highest resolution ("+elements[1].textContent+")");
-        }
-    });
-
-    waitUntilElementsBySelector(".vjs-fullscreen-control.vjs-disabled", 50, new Date().getTime() + maxWait, (err, elements) => {
-        if(err) return;
-        const fullscreenButton = elements[0];
-        fullscreenButton.disabled = false;
-        fullscreenButton.classList.remove("vjs-disabled");
-        fullscreenButton.ariaDisabled = "false";
-        fullscreenButton.addEventListener("click", clickEvent => {
-            document.querySelector("video").dispatchEvent(new KeyboardEvent("keydown", {
-                key: "f",
-                code: "KeyF",
-                keyCode: 70,
-                bubbles: true,
-                cancelable: true
-            }));
-            console.info("Rooster Teeth Volume Persistence user script: toggled video fullscreen");
+            videoContainer.return.memoizedState.binge = false;
+            console.info("Rooster Teeth userscript: disabled autoplaying next video (binge watching)");
         });
+    }
 
-        document.getElementById("video-fullscreen-hide-css").remove();
-    });
+    function waitUntilElementsBySelector(selectors, retryInterval, deadline, callback){
+        if(typeof selectors.map !== "function"){
+            selectors = [selectors];
+        }
 
-    function waitUntilElementsBySelector(selector, retryInterval, deadline, callback){
-        const elements = document.querySelectorAll(selector);
-        if(elements.length){
+        const elements = selectors.map(selector => document.querySelectorAll(selector));
+
+        if(elements.every(nodeList => nodeList.length > 0)){
             callback(null, elements);
-        } else if(new Date() <= deadline) {
-            setTimeout(waitUntilElementsBySelector.bind(null, selector, retryInterval, deadline, callback), retryInterval);
+        } else if(new Date() <= deadline || !(deadline > 0)) {
+            setTimeout(waitUntilElementsBySelector.bind(null, selectors, retryInterval, deadline, callback), retryInterval);
         } else {
-            callback(new Error(`deadline passed and no ${selector} elements were found`));
+            callback(new Error(`deadline passed and one or more ${selectors} elements were not found`));
         }
     }
 
