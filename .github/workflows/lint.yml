@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-fund
 
       - name: Lint
         run: npm run lint
