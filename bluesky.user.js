@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bluesky
 // @namespace    https://aldaviva.com/userscripts/bluesky
-// @version      0.0.4
+// @version      0.0.5
 // @description  Hide self-reposts
 // @author       Ben Hutchison
 // @match        https://bsky.app/*
@@ -49,7 +49,7 @@
             const repostHeading = feedItem.querySelector(":scope > div > div > div > div");
             if(repostHeading?.ariaLabel?.startsWith("Reposted by")){
                 const repostedByUsername = repostHeading.querySelector("a")?.pathname.split('/', 3)[2];
-                const postedByUsername = feedItem.querySelector(":scope > div > div + div > div + div > div > div > a[href^='/profile/']")?.pathname.split('/', 3)[2];
+                const postedByUsername = feedItem.querySelector(":scope > div > div + div > div + div > div > div > div > a[href^='/profile/']")?.pathname.split('/', 3)[2];
 
                 if(repostedByUsername === postedByUsername){
                     feedItem.classList.add("repost");
