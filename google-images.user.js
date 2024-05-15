@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Google Images
 // @namespace    https://aldaviva.com/userscripts/google.search.images
-// @version      0.0.0
+// @version      0.0.1
 // @description  Always search for Large sizes in Google Images
 // @author       Ben Hutchison
 // @match        https://www.google.com/search?*
@@ -12,7 +12,7 @@
 (function() {
     'use strict';
 
-    const isImageSearchResultsPage = getQueryParam("tbm") === "isch";
+    const isImageSearchResultsPage = getQueryParam("udm") === "2";
     const isSizeFilterEnabled = getQueryParam("tbs") !== undefined;
 
     if (isImageSearchResultsPage && !isSizeFilterEnabled) {
@@ -21,7 +21,8 @@
 
     /**
      * Inspired by Grant J. Butler's very fast Query String Parsing (variant.js)
-     * Ben added URI decoding and multi-value support because he doesn't care about 140 character limits
+     * Ben added URI decoding and multi-value support because he doesn't care about 140 character limits.
+     * He also fixed it to support multiple consecutive ampersands, which Google Images sometimes uses, and seem to be valid in URLs.
      *
      * original gist: https://gist.github.com/grantjbutler/987036#file-variant-js
      * tests: http://jsbin.com/giladi/1/edit?js,output
