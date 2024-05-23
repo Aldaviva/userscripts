@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         Twitter Disable Auto-Reloading
+// @name         Twitter: Disable Auto-Reloading
 // @namespace    https://aldaviva.com/userscripts/twitter/disable-auto-reloading
-// @version      1.2.3
+// @version      1.2.4
 // @description  Don't automatically reload all the time.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
+// @match        https://x.com/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==

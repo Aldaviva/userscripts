@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         Ignore Twitter Notifications
+// @name         Twitter: Ignore Notifications
 // @namespace    https://aldaviva.com/userscripts/twitter/ignore-notifications
-// @version      1.2.2
+// @version      1.2.3
 // @description  Ignore unread notifications, but still show unread DMs.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
+// @match        https://x.com/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==

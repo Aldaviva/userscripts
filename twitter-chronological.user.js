@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name         Chronological Twitter
+// @name         Twitter: Chronological Timeline
 // @namespace    https://aldaviva.com/userscripts/twitter/chronological
-// @version      1.3.4
+// @version      1.3.5
 // @description  Always show Following on the home timeline, instead of For You.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
+// @match        https://x.com/*
 // @grant        none
 // @run-at       document-idle
 // ==/UserScript==
