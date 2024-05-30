@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter: Demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.3.4
+// @version      0.3.5
 // @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds). Make the home nav button a birdhouse again.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -121,11 +121,11 @@ nav a[data-testid = 'AppTabBar_Home_Link'] svg.stroked {
     display: inline-block;
 }
 
-html:has(> head > meta[property = 'og:title'][content = 'Home / X']) > body nav a[data-testid = 'AppTabBar_Home_Link'] svg.filled {
+html:has(> head > meta[property = 'og:title'][content = 'Home / Twitter']) > body nav a[data-testid = 'AppTabBar_Home_Link'] svg.filled {
     display: inline-block;
 }
 
-html:has(> head > meta[property = 'og:title'][content = 'Home / X']) > body nav a[data-testid = 'AppTabBar_Home_Link'] svg.stroked {
+html:has(> head > meta[property = 'og:title'][content = 'Home / Twitter']) > body nav a[data-testid = 'AppTabBar_Home_Link'] svg.stroked {
     display: none;
 }
 `;
@@ -156,6 +156,7 @@ html:has(> head > meta[property = 'og:title'][content = 'Home / X']) > body nav 
 
             if(newTitle !== oldTitle){
                 document.title = newTitle;
+                document.querySelector("head meta[property='og:title']").content = newTitle;
                 console.debug(`Changed title from '${oldTitle}' to '${newTitle}'`);
             }
         }
