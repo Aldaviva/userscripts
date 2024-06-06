@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inoreader toolbar buttons
 // @namespace    https://aldaviva.com/userscripts/inoreader-toolbar-buttons
-// @version      0.3.1
+// @version      0.4.0
 // @description  Add useful toolbar buttons to Inoreader
 // @author       Ben Hutchison
 // @match        https://www.inoreader.com/*
@@ -12,6 +12,8 @@
 (function() {
     'use strict';
 
+    const $ = window.$;
+
     addSubscribeAndManageButtons();
 
     showStarredFilterButton();
@@ -19,6 +21,8 @@
     makeFeedGearOpenSidebarPreferences();
 
     makeFeedEyeToggleHidingReadFeeds();
+
+    addUntagKeyboardShortcut();
 
     function addSubscribeAndManageButtons(){
         var parent = document.getElementById("sb_tp_buttons");
@@ -99,5 +103,19 @@
             toggleButton.classList.toggle("hiding_read_feeds", !!window.hide_read_feeds);
             toggleButton.title = window.hide_read_feeds ? "Show all feeds" : "Show only feeds with unread articles";
         }
+    }
+
+    function addUntagKeyboardShortcut(){
+        document.addEventListener("keydown", event => {
+            if(event.key === 'T' && event.shiftKey){
+                if($(".article_footer_buttons.tags_img").click().length){ // open tags menu
+                    $(".article_tags_menu_tag_added").each(function(){
+                        $(this).mouseover().click(); // remove all tags
+                    });
+                    $(".article_footer_buttons.tags_img").click(); // close tags menu
+                }
+                event.preventDefault();
+            }
+        });
     }
 })();
