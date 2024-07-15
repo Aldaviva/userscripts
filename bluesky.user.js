@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bluesky
 // @namespace    https://aldaviva.com/userscripts/bluesky
-// @version      0.0.6
+// @version      0.0.7
 // @description  Hide self-reposts
 // @author       Ben Hutchison
 // @match        https://bsky.app/*
@@ -13,9 +13,9 @@
     'use strict';
 
     const maxWaitSec = 10;
-    waitUntilElementsBySelector(["#root > div > div > div > div > div > div"], 200, new Date() + maxWaitSec * 1000, (err, els) => {
+    waitUntilElementsBySelector(["#root div:has(> div > div[data-testid='followingFeedPage'])"], 200, new Date() + maxWaitSec * 1000, (err, els) => {
         if(err){
-            console.info(`Could not find timeline parent after ${maxWaitSec} seconds`);
+            console.warn(`Could not find timeline parent after ${maxWaitSec} seconds`);
         } else {
             const timelinesParentEl = els[0][0];
 
@@ -46,15 +46,12 @@
     function hideSelfReposts(parentEl){
         const feedItems = parentEl.querySelectorAll("div[role=link][data-testid ^= 'feedItem-by-']");
         for(const feedItem of feedItems){
-            const repostHeading = feedItem.querySelector(":scope > div > div > div > div");
-            if(repostHeading?.ariaLabel?.startsWith("Reposted by")){
-                const repostedByUsername = repostHeading.querySelector("a")?.pathname.split('/', 3)[2];
-                const postedByUsername = feedItem.querySelector(":scope > div > div + div > div + div > div > div > div a[href^='/profile/']")?.pathname.split('/', 3)[2];
+            const repostedByUsername = feedItem.querySelector(":scope > div > div:nth-child(1) div[aria-label ^= 'Reposted by'] a")?.pathname.split('/', 3)[2];
+            const postedByUsername = feedItem.querySelector(":scope > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) a[href^='/profile/']")?.pathname.split('/', 3)[2];
 
-                if(repostedByUsername === postedByUsername){
-                    feedItem.classList.add("repost");
-                    console.log(`Hid repost from ${repostedByUsername}`);
-                }
+            if(repostedByUsername === postedByUsername && repostedByUsername !== undefined){
+                feedItem.classList.add("repost");
+                console.log(`Hid repost from ${repostedByUsername}`);
             }
         }
     }
