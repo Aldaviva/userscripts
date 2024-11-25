@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bluesky
 // @namespace    https://aldaviva.com/userscripts/bluesky
-// @version      0.0.7
+// @version      0.0.8
 // @description  Hide self-reposts
 // @author       Ben Hutchison
 // @match        https://bsky.app/*
@@ -18,6 +18,7 @@
             console.warn(`Could not find timeline parent after ${maxWaitSec} seconds`);
         } else {
             const timelinesParentEl = els[0][0];
+            console.log("Found timeline parent", timelinesParentEl);
 
             hideSelfReposts(document.body);
 
@@ -46,8 +47,8 @@
     function hideSelfReposts(parentEl){
         const feedItems = parentEl.querySelectorAll("div[role=link][data-testid ^= 'feedItem-by-']");
         for(const feedItem of feedItems){
-            const repostedByUsername = feedItem.querySelector(":scope > div > div:nth-child(1) div[aria-label ^= 'Reposted by'] a")?.pathname.split('/', 3)[2];
-            const postedByUsername = feedItem.querySelector(":scope > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) a[href^='/profile/']")?.pathname.split('/', 3)[2];
+            const repostedByUsername = feedItem.querySelector(":scope > div > div:nth-child(2) div[aria-label ^= 'Reposted by'] a")?.pathname.split('/', 3)[2];
+            const postedByUsername = feedItem.querySelector(":scope > div > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) a[href^='/profile/']")?.pathname.split('/', 3)[2];
 
             if(repostedByUsername === postedByUsername && repostedByUsername !== undefined){
                 feedItem.classList.add("repost");
