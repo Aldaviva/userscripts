@@ -32,6 +32,7 @@ Bad user interfaces
 |Site|Changes|
 |-|-|
 |[Bluesky](https://github.com/Aldaviva/userscripts/raw/master/bluesky.user.js)|Hide self-reposts.|
+|[Freshping](https://github.com/Aldaviva/userscripts/raw/master/freshping.user.js)|Show 90 day uptime reports by default, instead of only the current day.|
 |[Google Images](https://github.com/Aldaviva/userscripts/raw/master/google-images.user.js)|Always search for Large sizes in Google Images, instead of having to always click Tools › Size › Large every time you change the query.|
 |[Newegg](https://github.com/Aldaviva/userscripts/raw/master/newegg.user.js)|Allow you to load order history for any year, not just the last 10 years.|
 |[Nixplay](https://github.com/Aldaviva/userscripts/raw/master/nixplay.user.js)|Increase the maximum concurrent file upload limit from 3 to 24, because it spends most of its time idle while waiting for S3 instead of saturating my uplink.|
