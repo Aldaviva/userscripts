@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Freshping
 // @namespace    https://aldaviva.com/userscripts/freshping
-// @version      0.1.0
+// @version      0.1.1
 // @description  Maximum default report duration
 // @author       Ben Hutchison
 // @match        https://*.freshping.io/*
@@ -25,56 +25,48 @@
             if (!err) {
                 const reportsEl = els[0][0];
                 const reports = reportsEl[Object.keys(reportsEl).find(k => k.startsWith("__reactInternalInstance$"))].return.stateNode;
-                if(/*reports.handleTimeChange &&*/ reports.handleChange){
+                if (reports.handleChange) {
                     const earliestReportDate = new Date();
                     earliestReportDate.setDate(earliestReportDate.getDate() - 90);
-                    reports.setState({
-                        startDate: earliestReportDate.getDate() + " " + monthAbbreviations[earliestReportDate.getMonth()] + " " + earliestReportDate.getFullYear()
-                    });
-
-                    //reports.handleTimeChange();
-                    reports.handleChange();
-                } else {
-                    console.warn("No reports.handleTimeChange() or reports.handleChange()", reports);
+                    const earliestReportDateString = earliestReportDate.getDate() + " " + monthAbbreviations[earliestReportDate.getMonth()] + " " + earliestReportDate.getFullYear();
+                    if (reports.state.startDate !== earliestReportDateString) {
+                        reports.setState({ startDate: earliestReportDateString });
+                        reports.handleChange();
+                    }
                 }
             }
         });
     }
 
     window.addEventListener("pushstate", event => {
-        console.log("pushState: url="+event.url/*+", state.key="+event.state.key*/);
         const newUrl = new URL(event.url, window.location.href);
         const newUrlString = newUrl.toString();
-        if (oldUrlString !== newUrlString){
-            console.debug(newUrlString+" is different from "+oldUrlString);
+        if (oldUrlString !== newUrlString) {
             if (newUrl.pathname == "/reports" && parseInt(newUrl.searchParams.get("check_id"), 10) > 0) {
-                console.debug("Setting report duration to max");
                 setReportDurationToMax();
             }
             oldUrlString = newUrlString;
-        } else {
-            console.debug(newUrlString+" is the same as "+oldUrlString);
         }
     });
 
     const originalPushState = window.history.pushState;
-    window.history.pushState = function(state, _, url){
+    window.history.pushState = function(state, _, url) {
         originalPushState.apply(window.history, arguments);
         window.dispatchEvent(new PushStateEvent(state, url));
     };
 
-    setTimeout(() => setReportDurationToMax(), 100);
+    setTimeout(setReportDurationToMax, 200);
 
-    function waitUntilElementsBySelector(selectors, retryInterval, deadline, callback){
+    function waitUntilElementsBySelector(selectors, retryInterval, deadline, callback) {
         if(typeof selectors.map !== "function"){
             selectors = [selectors];
         }
 
         const elements = selectors.map(selector => document.querySelectorAll(selector));
 
-        if(elements.every(nodeList => nodeList.length > 0)){
+        if (elements.every(nodeList => nodeList.length > 0)) {
             callback(null, elements);
-        } else if(new Date() <= deadline || !(deadline > 0)) {
+        } else if (new Date() <= deadline || !(deadline > 0)) {
             setTimeout(waitUntilElementsBySelector.bind(null, selectors, retryInterval, deadline, callback), retryInterval);
         } else {
             callback(new Error(`deadline passed and one or more ${selectors} elements were not found`));
@@ -82,7 +74,7 @@
     }
 
     class PushStateEvent extends Event {
-        constructor(state, url){
+        constructor(state, url) {
             super("pushstate");
             this.state = state;
             this.url = url;
