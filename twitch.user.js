@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitch
 // @namespace    https://aldaviva.com/userscripts/twitch
-// @version      0.3.0
+// @version      0.3.1
 // @description  Automatically claim channel points, suppress ads, and prevent the video from switching to low resolution when the page is idle.
 // @author       Ben Hutchison
 // @match        https://www.twitch.tv/*
@@ -19,7 +19,7 @@
             channelPointsButton.click();
         }
 
-        if(document.querySelector(".content-overlay-gate p")?.textContent?.includes("(Error #") ?? false){
+        if(document.querySelector(".content-overlay-gate strong")?.textContent?.includes("(Error #") ?? false){
             document.querySelector(".content-overlay-gate button").click();
             return;
         }
