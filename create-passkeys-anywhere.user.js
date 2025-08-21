@@ -12,6 +12,9 @@
 (function() {
     'use strict';
 
+    /**
+     * If options changes aren't taking effect, remember to reload the target webpage after saving this script.
+     */
     const options = {
 
         /**
