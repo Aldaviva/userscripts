@@ -24,6 +24,7 @@ Bad user interfaces
 1. Click the site name in the [table below](#targeted-websites).
     - Alternately, you can open the user script file from this repository that you want, then click the Raw button.
 1. On the Tampermonkey page that appears, click the **Install** button.
+1. If the targeted website is already open, reload it to make the userscript start running immediately. Otherwise, it will start the next time you load the site.
 
 *Instructions were written for Tampermonkey 5.3. Other extensions may need different steps.*
 
