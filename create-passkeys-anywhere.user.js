@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Create Passkeys Anywhere
 // @namespace    https://aldaviva.com/userscripts/create-passkeys-anywhere
-// @version      0.0.1
+// @version      0.0.2
 // @description  Let you choose where to store a newly created passkey, on a security key or in the TPM
 // @author       Ben Hutchison
 // @match        https://*/*
@@ -33,9 +33,12 @@
         const publicKey = opts?.publicKey;
         if(publicKey){
             const authenticatorAttachment = authenticatorAttachments[options.allowedPasskeyCreationStorage];
-            if(authenticatorAttachment !== undefined){
-                publicKey.authenticatorSelection ??= {};
+            publicKey.authenticatorSelection ??= {};
+            delete publicKey.authenticatorSelection.userVerification;
+            if(authenticatorAttachment){
                 publicKey.authenticatorSelection.authenticatorAttachment = authenticatorAttachment;
+            } else if(authenticatorAttachment === null){
+                delete publicKey.authenticatorSelection.authenticatorAttachment;
             } else {
                 console.warn("Create Passkeys Anywhere: Unknown allowedPasskeyCreationStorage value "+options.allowedPasskeyCreationStorage+", allowed values are anywhere, securityKey, and tpm");
             }
