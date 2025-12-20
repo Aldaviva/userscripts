@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Twitter: Chronological Timeline
+// @name         Twitter Chronological Timeline
 // @namespace    https://aldaviva.com/userscripts/twitter/chronological
-// @version      1.3.5
+// @version      1.3.6
 // @description  Always show Following on the home timeline, instead of For You.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -25,8 +25,11 @@
 
     function ensureLatestTweetsFirst() {
         if(window.location.pathname === "/home"){
-            waitUntilElementsBySelector("[data-testid='ScrollSnap-List'] a[href='/home']", 100, +new Date()+30000, (error, elements) => {
-                if(error) return;
+            waitUntilElementsBySelector("[data-testid='ScrollSnap-List'] div[role=tab]", 100, +new Date()+10000, (error, elements) => {
+                if(error) {
+                    console.error(error);
+                    return;
+                }
 
                 const forYouTab = elements[0];
                 const followingTab = elements[1];
