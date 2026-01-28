@@ -6,6 +6,7 @@
 // @author       Ben Hutchison
 // @match        http://192.168.0.1/*
 // @match        http://192.168.1.1/*
+// @match        http://192.168.40.1/*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
