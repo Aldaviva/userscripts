@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Splitwise
 // @namespace    https://aldaviva.com/userscripts/splitwise
-// @version      0.2.0
-// @description  Disable Splitwise keyboard shortcuts. Add more automatic categories. Make currency inputs numeric.
+// @version      0.3.0
+// @description  Disable Splitwise keyboard shortcuts. Add more automatic categories. Make currency inputs numeric. Disable upsell wait nag.
 // @author       Ben Hutchison
 // @match        https://secure.splitwise.com
 // @grant        none
@@ -47,4 +47,11 @@
         const originalTemplate = originalItemizedItemTemplate(obj);
         return originalTemplate.replace('<input type="text" name="amount" class="amount" ', '<input type="number" step="0.01" name="amount" class="amount" ');
     };
+
+    /**
+     * Disable screen that makes you buy a paid account when adding more than two expenses per day, or wait to add each subsequent expense.
+     */
+    setTimeout(() => {
+        window.App.metadata.features.add_expense.behavior.webview.expiration = "1970-01-01T00:00:00Z";
+    }, 1000);
 })();
