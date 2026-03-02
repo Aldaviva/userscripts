@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Twitter: Disable Auto-Reloading
+// @name         Twitter Disable Auto-Reloading
 // @namespace    https://aldaviva.com/userscripts/twitter/disable-auto-reloading
-// @version      1.2.4
+// @version      1.2.5
 // @description  Don't automatically reload all the time.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -37,10 +37,12 @@
                 n = r
         }
     */
-    const reloaderMethodPattern = /=Date\.now\(\).*?\b(?<methodName>\w{1,3})=\w{1,3}=>{const \w{1,3}=Date\.now\(\).*?window\.location\.reload\(/gm;
+    //const reloaderMethodPattern = /=Date\.now\(\).*?\b(?<methodName>\w{1,3})=\w{1,3}=>{const \w{1,3}=Date\.now\(\).*?window\.location\.reload\(/gm;
     const originalDateNow = Date.now;
-    const reloaderMethodName = findReloaderMethodName();
+    //const reloaderMethodName = findReloaderMethodName();
     const stackContainsMethod = getStackMatcherForCurrentJavascriptEngine();
+
+    Object.defineProperty(document, "visibilityState", { value: "hidden", writable: false }); // avoid the code path that reloads the page when foregrounding the tab
 
     Object.defineProperty(Date, "now", {
         value: function() {
@@ -54,7 +56,7 @@
         configurable: false
     });
 
-    function findReloaderMethodName(){
+    /*function findReloaderMethodName(){
         for(let bucket of window.webpackChunk_twitter_responsive_web){
             for(let moduleName in bucket[1]){
                 const module = bucket[1][moduleName];
@@ -69,13 +71,13 @@
         }
         console.warn("Could not find method that reloads the page");
         return null;
-    }
+    }*/
 
     function isExecutingReloaderMethod(){
         const stack = new Error().stack;
 
         const methodNamesToFind = [
-            reloaderMethodName, //page was focused, reload entire page
+            //reloaderMethodName, //page was focused, reload entire page
             "Object.fetchTop", //page was focused, update timeline
             "fetchInitialOrTop", //timeline was scrolled up to top
             //"ue._fetchInitialOrTop", //always appears with above method
