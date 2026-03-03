@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Splitwise
 // @namespace    https://aldaviva.com/userscripts/splitwise
-// @version      0.3.0
+// @version      0.3.1
 // @description  Disable Splitwise keyboard shortcuts. Add more automatic categories. Make currency inputs numeric. Disable upsell wait nag.
 // @author       Ben Hutchison
 // @match        https://secure.splitwise.com
@@ -51,7 +51,9 @@
     /**
      * Disable screen that makes you buy a paid account when adding more than two expenses per day, or wait to add each subsequent expense.
      */
-    setTimeout(() => {
+    function removeNag(){
         window.App.metadata.features.add_expense.behavior.webview.expiration = "1970-01-01T00:00:00Z";
-    }, 1000);
+    }
+    setInterval(removeNag, 2000);
+    setTimeout(removeNag, 1000);
 })();
