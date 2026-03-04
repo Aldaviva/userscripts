@@ -1,12 +1,12 @@
 {
     "devDependencies": {
-        "eslint": "9.39.1",
+        "eslint": "10.0.2",
         "eslint-formatter-tap": "9.0.1"
     },
     "scripts": {
         "lint": "npx eslint --format tap ."
     },
     "engines": {
-        "node": ">= 18.18"
+        "node": "^20.19.0"
     }
 }
