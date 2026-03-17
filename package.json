@@ -1,7 +1,7 @@
 {
     "private": true,
     "devDependencies": {
-        "eslint": "10.0.2",
+        "eslint": "10.0.3",
         "@eslint/js": "10.0.1",
         "globals": "17.4.0",
         "eslint-formatter-tap": "9.0.1"
