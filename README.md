@@ -36,6 +36,7 @@ Bad user interfaces
 |[Create Passkeys Anywhere](https://github.com/Aldaviva/userscripts/raw/master/create-passkeys-anywhere.user.js)|Always allow you to choose whether newly created passkeys should be stored on either USB security keys (roaming authenticators) or the TPM (platform).|
 |[Freshping](https://github.com/Aldaviva/userscripts/raw/master/freshping.user.js)|Show 90 day uptime reports by default, instead of only the current day.|
 |[Google Images](https://github.com/Aldaviva/userscripts/raw/master/google-images.user.js)|Always search for Large sizes in Google Images, instead of having to always click Tools › Size › Large every time you change the query.|
+|[Inoreader](https://github.com/Aldaviva/userscripts/raw/master/inoreader-toolbar-buttons.user.js)|Add a keyboard shortcut to remove the first tag from the current article (<kbd>Shift</kbd>+<kbd>T</kbd>).|
 |[Newegg](https://github.com/Aldaviva/userscripts/raw/master/newegg.user.js)|Allow you to load order history for any year, not just the last 10 years.|
 |[Nixplay](https://github.com/Aldaviva/userscripts/raw/master/nixplay.user.js)|Increase the maximum concurrent file upload limit from 3 to 24, because it spends most of its time idle while waiting for S3 instead of saturating my uplink.|
 |[Pandora](https://github.com/Aldaviva/userscripts/raw/master/pandora-now-playing.user.js)|Show the currently playing artist and song title in the Pandora document title.|
