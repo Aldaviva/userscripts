@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Inoreader toolbar buttons
+// @name         Inoreader
 // @namespace    https://aldaviva.com/userscripts/inoreader-toolbar-buttons
-// @version      0.4.0
-// @description  Add useful toolbar buttons to Inoreader
+// @version      1.0.0
+// @description  Untag current article
 // @author       Ben Hutchison
 // @match        https://www.inoreader.com/*
 // @grant        none
@@ -14,108 +14,43 @@
 
     const $ = window.$;
 
-    addSubscribeAndManageButtons();
-
-    showStarredFilterButton();
-
-    makeFeedGearOpenSidebarPreferences();
-
-    makeFeedEyeToggleHidingReadFeeds();
-
     addUntagKeyboardShortcut();
 
-    function addSubscribeAndManageButtons(){
-        var parent = document.getElementById("sb_tp_buttons");
-
-        parent.appendChild(createButton("Subscribe", function(event){
-            window.show_add_options();
-        }));
-
-        parent.appendChild(createButton("Manage", function(event){
-            window.show_dialog("preferences_dialog", { focus_tab: 2 });
-        }));
-    }
-
-    function createButton(label, onClick){
-        var buttonEl = document.createElement("div");
-        buttonEl.setAttribute("class", "inno_toolbar_button");
-        buttonEl.addEventListener("click", onClick);
-
-        var labelEl = document.createElement("span");
-        labelEl.setAttribute("class", "inno_toolbar_button_caption");
-        labelEl.appendChild(document.createTextNode(label));
-        buttonEl.appendChild(labelEl);
-
-        return buttonEl;
-    }
-
-    function showStarredFilterButton(){
-        const originalToolbarSwitcher = window.inno_toolbar_switcher;
-
-        window.inno_toolbar_switcher = (id, buttons, switch_function) => {
-            const shouldAddStarredButton = buttons.length < 3;
-            if(shouldAddStarredButton){
-                buttons.push({
-                    id: "favorites_cnt_top",
-                    caption: window._js("Starred"),
-                    value: 2,
-                    active: false
-                });
+    function addUntagKeyboardShortcut() {
+        document.addEventListener("keydown", event => {
+            if (event.key === 'T' && event.shiftKey) {
+                const untagButton = findUntagButtons().first();
+                if (untagButton.length) {
+                    untagButton.click();
+                    event.preventDefault();
+                }
             }
-
-            const unreadFilterSwitcher = originalToolbarSwitcher(id, buttons, switch_function);
-
-            if(!shouldAddStarredButton){
-                // If we're already in the Starred section, the above push won't add a button because it's already there. However, we still need to make the button label say "Starred" instead of "Read later".
-                unreadFilterSwitcher.querySelectorAll("#favorites_cnt_top > div").forEach(labelEl => {
-                    labelEl.textContent = window._js("Starred");
-                });
-            }
-
-            return unreadFilterSwitcher;
-        };
-    }
-
-    function makeFeedGearOpenSidebarPreferences(){
-        document.querySelector(".sf_cog").onclick = function(event){
-            event.preventDefault();
-            console.log("showing sidebar prefs");
-            window.location = "#preferences-interface-tree_pane";
-        };
-    }
-
-    function makeFeedEyeToggleHidingReadFeeds(){
-        var parent = document.querySelector(".sidebar_legend");
-        var toggleButton = document.createElement("div");
-        toggleButton.classList.add("toggle_hide_read_feeds", "icon16", "icon-eyeball", "pointer_icon");
-        render();
-        parent.insertBefore(toggleButton, document.getElementById("subscription_options_peek_wrapper"));
-
-        toggleButton.addEventListener("click", function(event){
-            event.preventDefault();
-            var newValue = +!window.hide_read_feeds;
-            window.hide_read_feeds = newValue;
-            render();
-            window.xajax_save_user_pref("hide_read_feeds", ""+newValue);
         });
 
-        function render(){
-            toggleButton.classList.toggle("hiding_read_feeds", !!window.hide_read_feeds);
-            toggleButton.title = window.hide_read_feeds ? "Show all feeds" : "Show only feeds with unread articles";
+        window.addEventListener("pushstate", event => {
+            findUntagButtons().each(function(index, el) {
+                const tagName = el.previousSibling.textContent.trim();
+                $(el).attr("title", `Remove "${tagName}" tag from article (Shift+T)`);
+            });
+        });
+
+        function findUntagButtons() {
+            return $(".article-tag-close");
         }
     }
 
-    function addUntagKeyboardShortcut(){
-        document.addEventListener("keydown", event => {
-            if(event.key === 'T' && event.shiftKey){
-                if($(".article_footer_buttons.tags_img").click().length){ // open tags menu
-                    $(".article_tags_menu_tag_added").each(function(){
-                        $(this).mouseover().click(); // remove all tags
-                    });
-                    $(".article_footer_buttons.tags_img").click(); // close tags menu
-                }
-                event.preventDefault();
-            }
-        });
+    const originalPushState = window.history.pushState;
+    window.history.pushState = function(state, _, url) {
+        console.log("pushState: state="+state+", url="+url);
+        originalPushState.apply(window.history, arguments);
+        window.dispatchEvent(new PushStateEvent(state, url));
+    };
+
+    class PushStateEvent extends Event {
+        constructor(state, url) {
+            super("pushstate");
+            this.state = state;
+            this.url = url;
+        }
     }
 })();
