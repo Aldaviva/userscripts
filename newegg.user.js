@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Newegg
 // @namespace    https://aldaviva.com/userscripts/newegg
-// @version      0.0.0
+// @version      0.0.1
 // @description  Allow you to load order history for any year, not just the last 10 years
 // @author       Ben Hutchison
 // @match        https://secure.newegg.com/orders/list*
@@ -18,7 +18,7 @@
     let nextModuleId = 888888;
 
     inject(window.webpackChunkb2c_site_ssl, function(require) {
-        const httpClient = require(".prototype.processResponse=function(");
+        const httpClient = require("preprocessResponse(");
 
         const httpClientPrototype = Object.getPrototypeOf(httpClient[Object.getOwnPropertyNames(httpClient)[0]]);
         const originalProcessResponse = httpClientPrototype.processResponse;
@@ -36,21 +36,25 @@
         };
     });
 
-    function inject(webpackRoot, moduleFunction){
+    function inject(webpackRoot, moduleFunction) {
         const chunkId = nextChunkId++;
         const moduleId = nextModuleId++;
 
         let chunk = {};
-        chunk[moduleId] = function(e, t, getDependencyById){
+        chunk[moduleId] = function(e, t, getDependencyById) {
             moduleFunction(require);
 
             function require(dependencySourcePredicate) {
-                if(typeof dependencySourcePredicate === "string"){
+                if (typeof dependencySourcePredicate === "string") {
                     const needle = dependencySourcePredicate;
                     dependencySourcePredicate = (funcSource) => funcSource.indexOf(needle) !== -1;
                 }
 
-                return getDependencyById(findModuleId(webpackRoot, dependencySourcePredicate));
+                const moduleId = findModuleId(webpackRoot, dependencySourcePredicate);
+                if (moduleId === null) {
+                    throw new Error("Could not find module");
+                }
+                return getDependencyById(moduleId);
             }
         };
 
