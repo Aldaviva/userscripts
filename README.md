@@ -26,7 +26,7 @@ Bad user interfaces
 1. On the Tampermonkey page that appears, click the **Install** button.
 1. If the targeted website is already open, reload it to make the user script start running immediately. Otherwise, it will start the next time you load the site.
 
-*Instructions were written for Tampermonkey 5.3. Other extensions may need different steps.*
+*Instructions were written for Tampermonkey 5.4. Other extensions may need different steps.*
 
 ## Targeted websites
 
@@ -34,7 +34,6 @@ Bad user interfaces
 |-|-|
 |[Bluesky](https://github.com/Aldaviva/userscripts/raw/master/bluesky.user.js)|Hide self-reposts.|
 |[Create Passkeys Anywhere](https://github.com/Aldaviva/userscripts/raw/master/create-passkeys-anywhere.user.js)|Always allow you to choose whether newly created passkeys should be stored on either USB security keys (roaming authenticators) or the TPM (platform).|
-|[Freshping](https://github.com/Aldaviva/userscripts/raw/master/freshping.user.js)|Show 90 day uptime reports by default, instead of only the current day.|
 |[Google Images](https://github.com/Aldaviva/userscripts/raw/master/google-images.user.js)|Always search for Large sizes in Google Images, instead of having to always click Tools › Size › Large every time you change the query.|
 |[Inoreader](https://github.com/Aldaviva/userscripts/raw/master/inoreader-toolbar-buttons.user.js)|Add a keyboard shortcut to remove the first tag from the current article (<kbd>Shift</kbd>+<kbd>T</kbd>).|
 |[Newegg](https://github.com/Aldaviva/userscripts/raw/master/newegg.user.js)|Allow you to load order history for any year, not just the last 10 years.|
