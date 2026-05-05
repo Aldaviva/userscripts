@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Block TP-Link redirections
 // @namespace    https://aldaviva.com/userscripts/tplinkwifiredirect
-// @version      0.0.2
+// @version      0.0.3
 // @description  TP-Link AX20 v1.20: Don't redirect to tplinkwifi.net every time I try to log in to my router after the last session expired, because the IP address of that domain in DNS is wrong when DNS over HTTPS is enabled and the router can't intercept my DNS requests
 // @author       Ben Hutchison
 // @match        http://192.168.0.1/*
@@ -17,7 +17,7 @@
     let attempts = 0;
     const start = new Date();
 
-    if(window.$ && window.$.su && window.$.su.modulManager){
+    if(window.$ && window.$.su && window.$.su.moduleManager){
         const interval = setInterval(() => {
             attempts++;
 
