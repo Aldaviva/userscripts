@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Splitwise
 // @namespace    https://aldaviva.com/userscripts/splitwise
-// @version      0.3.1
+// @version      0.4.0
 // @description  Disable Splitwise keyboard shortcuts. Add more automatic categories. Make currency inputs numeric. Disable upsell wait nag.
 // @author       Ben Hutchison
 // @match        https://secure.splitwise.com
@@ -26,16 +26,16 @@
      */
     const originalGuessCategory = window.guess_category;
     window.App.Models.Expense.prototype.guessCategoryFromDescription = window.guess_category = description => {
-        if(/\blucky\b/i.test(description)){
+        if (/\b(?:lucky|food[- ]?maxx?)\b/i.test(description)) {
             return getCategoryIdByName("Groceries");
-        } else if(/\bPG&?E\b/i.test(description)){
+        } else if (/\bPG&?E\b/i.test(description)) {
             return getCategoryIdByName("Heat/gas");
         } else {
             return originalGuessCategory(description);
         }
     };
 
-    function getCategoryIdByName(name){
+    function getCategoryIdByName(name) {
         return window.App.categories.detect(category => category.get("name") === name).id;
     }
 
@@ -43,16 +43,17 @@
      * Make currency inputs of type numeric, not text, so they disallow commas and other invalid characters
      */
     const originalItemizedItemTemplate = window.JST["backbone/templates/modals/itemized-item"];
-    window.JST["backbone/templates/modals/itemized-item"] = obj => {
-        const originalTemplate = originalItemizedItemTemplate(obj);
-        return originalTemplate.replace('<input type="text" name="amount" class="amount" ', '<input type="number" step="0.01" name="amount" class="amount" ');
-    };
+    window.JST["backbone/templates/modals/itemized-item"] = obj =>
+        originalItemizedItemTemplate(obj).replace('<input type="text" name="amount" class="amount" ', '<input type="number" step="0.01" name="amount" class="amount" ');
 
     /**
-     * Disable screen that makes you buy a paid account when adding more than two expenses per day, or wait to add each subsequent expense.
+     * Disable screen that makes you buy a paid account when adding more than two expenses per day, or wait to add each subsequent expense, because I always add 3–4 expenses per month but all on the same day so I'd get penalized despite my low average usage.
      */
-    function removeNag(){
-        window.App.metadata.features.add_expense.behavior.webview.expiration = "1970-01-01T00:00:00Z";
+    function removeNag() {
+        const nagWebview = window.App.metadata.features.add_expense.behavior.webview;
+        if (nagWebview) {
+            nagWebview.expiration = "1970-01-01T00:00:00Z";
+        }
     }
     setInterval(removeNag, 2000);
     setTimeout(removeNag, 1000);
