@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Twitter: Demusking
 // @namespace    https://aldaviva.com/userscripts/twitter-font-2022
-// @version      0.3.5
+// @version      0.3.6
 // @description  Revert the font changes that were made on 2023-01-26: Chirp got a higher x-height, terminal on `l`, serifs on `I`, and slash on `0` (https://www.theverge.com/2023/1/26/23572746/twitter-changed-font-impersonators). Revert the logo and title changes that were made on or around 2023-07-24 (https://www.theverge.com/2023/7/24/23805415/twitter-x-logo-rebrand-bird-farewell-to-birds). Make the home nav button a birdhouse again.
 // @author       Ben Hutchison
 // @match        https://twitter.com/*
@@ -137,7 +137,7 @@ html:has(> head > meta[property = 'og:title'][content = 'Home / Twitter']) > bod
         clearInterval(birdhouseInterval);
     }, 30*1000);
 
-    document.addEventListener("DOMContentLoaded", () => {
+    (cb => document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", cb) : cb())(() => {
         const titleReplacements = [
             [/^X$/, "Twitter"],
             [/ \/ X$/, " / Twitter"],
