@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Inoreader
 // @namespace    https://aldaviva.com/userscripts/inoreader-toolbar-buttons
-// @version      1.0.0
+// @version      1.0.1
 // @description  Untag current article
 // @author       Ben Hutchison
 // @match        https://www.inoreader.com/*
@@ -18,7 +18,7 @@
 
     function addUntagKeyboardShortcut() {
         document.addEventListener("keydown", event => {
-            if (event.key === 'T' && event.shiftKey) {
+            if (event.key === 'T' && event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
                 const untagButton = findUntagButtons().first();
                 if (untagButton.length) {
                     untagButton.click();
@@ -41,7 +41,6 @@
 
     const originalPushState = window.history.pushState;
     window.history.pushState = function(state, _, url) {
-        console.log("pushState: state="+state+", url="+url);
         originalPushState.apply(window.history, arguments);
         window.dispatchEvent(new PushStateEvent(state, url));
     };
